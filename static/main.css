@@ -1,0 +1,137 @@
+:root {
+    --sea-outer-color: #163399;
+    --sea-inner-color: #3366ef;
+    --tile-size: 30px;
+    --tile-border: 5px;
+    --sqrt3: 1.73205;
+    --tile-size-half: calc(var(--tile-size) / 2);
+    --tile-size-sqrt3: calc(var(--tile-size) * var(--sqrt3));
+    --tile-size-sqrt3-half: calc(var(--tile-size-sqrt3) / 2);
+    --tile-border-vert: calc(var(--tile-border) / var(--sqrt3));
+    --inner-tile-size: calc(var(--tile-size) - 2 * var(--tile-border-vert));
+    --inner-tile-size-half: calc(var(--inner-tile-size) / 2);
+    --inner-tile-size-sqrt3: calc(var(--inner-tile-size) * var(--sqrt3));
+    --inner-tile-size-sqrt3-half: calc(var(--inner-tile-size-sqrt3) / 2);
+}
+
+#content {
+    height: 100vh;
+}
+
+.game-portal {
+    width: 75%;
+    max-height: 90%;
+    margin-left: auto; margin-right: auto;
+    background-color: lightblue;
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+}
+.board {
+    display: inline-block;
+    padding-left: 50%;
+    padding-right: 50%;
+    padding-top: 25%;
+    padding-bottom: 25%;
+}
+
+.board-tile {
+    margin-top: var(--tile-size-half);
+    width: var(--tile-size-sqrt3);
+    height: var(--tile-size);
+    display: inline-flex; flex-direction: column;
+    margin-left: calc(-1 * var(--tile-border));
+}
+.board-tile > .upper {
+    width: 0; height: 0;
+    border-bottom: var(--tile-size-half) solid;
+    border-left: var(--tile-size-sqrt3-half) solid transparent;
+    border-right: var(--tile-size-sqrt3-half) solid transparent;
+    margin-top: calc(-1 * var(--tile-size-half));
+    margin-left: auto; margin-right: auto;
+}
+.board-tile > .lower {
+    width: 0; height: 0;
+    border-top: var(--tile-size-half) solid;
+    border-left: var(--tile-size-sqrt3-half) solid transparent;
+    border-right: var(--tile-size-sqrt3-half) solid transparent;
+    margin-top: 0px;
+    margin-left: auto; margin-right: auto;
+}
+.board-tile-inner {
+    min-height: var(--inner-tile-size);
+    margin-top: var(--tile-border-vert);
+    margin-bottom: var(--tile-border-vert);
+    margin-left: var(--tile-border);
+    margin-right: var(--tile-border);
+    display: flex; flex-direction: column;
+    z-index: 4;
+}
+.board-tile-inner > .content {
+    min-height: var(--inner-tile-size);
+}
+.board-tile-inner > .upper {
+    width: 0; height: 0;
+    border-bottom: var(--inner-tile-size-half) solid;
+    border-left: var(--inner-tile-size-sqrt3-half) solid transparent;
+    border-right: var(--inner-tile-size-sqrt3-half) solid transparent;
+    margin-top: calc(-1 * var(--inner-tile-size-half));
+    margin-left: auto; margin-right: auto;
+}
+.board-tile-inner > .lower {
+    width: 0; height: 0;
+    border-top: var(--inner-tile-size-half) solid;
+    border-left: var(--inner-tile-size-sqrt3-half) solid transparent;
+    border-right: var(--inner-tile-size-sqrt3-half) solid transparent;
+    margin-top: 0px;
+    margin-left: auto; margin-right: auto;
+}
+
+.board-row {
+    display: flex; flex-direction: row;
+    margin-top: calc(-1 * var(--tile-border));
+}
+.board-row:nth-child(even) {
+    margin-left: calc(-1 * var(--tile-border) / 2 + var(--tile-size-sqrt3-half));
+}
+
+.board-tile.sea {
+    z-index: 0;
+    background-color: var(--sea-outer-color);
+}
+.board-tile.sea > .upper {
+    border-bottom-color: var(--sea-outer-color);
+}
+.board-tile.sea > .lower {
+    border-top-color: var(--sea-outer-color);
+}
+.board-tile-inner.sea {
+    background-color: var(--sea-inner-color);
+}
+.board-tile-inner.sea > .upper {
+    border-bottom-color: var(--sea-inner-color);
+}
+.board-tile-inner.sea > .lower {
+    border-top-color: var(--sea-inner-color);
+}
+
+.board-tile.land {
+    z-index: 1;
+    --outer-color: #ffffff;
+    background-color: var(--outer-color);
+}
+.board-tile.land > .upper {
+    border-bottom-color: var(--outer-color);
+}
+.board-tile.land > .lower {
+    border-top-color: var(--outer-color);
+}
+.board-tile-inner.land {
+    background-color: var(--inner-color);
+}
+.board-tile-inner.land > .upper {
+    border-bottom-color: var(--inner-color);
+}
+.board-tile-inner.land > .lower {
+    border-top-color: var(--inner-color);
+}
