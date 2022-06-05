@@ -1,8 +1,8 @@
 {
-    "name": "rust-wasm-slay",
+    "name": "open-slay",
     "version": "0.1.0",
     "author": "Gurtej Kanwar <gurtejkanwar@gmail.com>",
-    "repository": "https://github.com/gkanwar/rust-wasm-slay.git",
+    "repository": "https://github.com/gkanwar/open-slay.git",
     "license": "MIT",
     "scripts": {
         "start": "CHOKIDAR_USEPOLLING=1 snowpack dev --verbose",
