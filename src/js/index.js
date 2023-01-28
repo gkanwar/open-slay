@@ -1,18 +1,13 @@
-import init, {make_test_game, TileKind} from 'rust-wasm-slay';
+import init, {make_test_game, TileKind, PlayerKind} from 'rust-wasm-slay';
+import {div, span} from './util';
 
 function buildTile(tileClass, tileContent) {
-    let tileDiv = document.createElement('div');
-    tileDiv.classList.add('board-tile', tileClass);
-    let tileUpper = document.createElement('div');
-    let tileLower = document.createElement('div');
-    tileUpper.classList.add('upper');
-    tileLower.classList.add('lower');
-    let tileDivInner = document.createElement('div');
-    tileDivInner.classList.add('board-tile-inner', tileClass);
-    let tileInnerUpper = document.createElement('div');
-    let tileInnerLower = document.createElement('div');
-    tileInnerUpper.classList.add('upper');
-    tileInnerLower.classList.add('lower');
+    let tileDiv = div('board-tile', tileClass);
+    let tileUpper = div('upper');
+    let tileLower = div('lower');
+    let tileDivInner = div('board-tile-inner', tileClass);
+    let tileInnerUpper = div('upper');
+    let tileInnerLower = div('lower');
     tileContent.classList.add('content');
     tileDivInner.appendChild(tileInnerUpper);
     tileDivInner.appendChild(tileContent);
@@ -58,11 +53,36 @@ function rgbToHex(color) {
     }).join('');
 }
 
-function drawGame(game, div) {
+function drawPlayerSummary(game) {
+    const playerBadges = game.get_players().map((player) => {
+        const playerBadge = div('player-badge');
+        const colorSwatch = div('color-swatch');
+        colorSwatch.style.setProperty('--color', rgbToHex(player.color));
+        const playerName = span('player-name');
+        playerName.innerText = (
+            player.kind == PlayerKind.Human ? 'Human' : 'Computer'
+        );
+        playerBadge.appendChild(colorSwatch);
+        playerBadge.appendChild(playerName);
+        return playerBadge;
+    });
+    const playerSummaryDiv = div('player-summary');
+    playerBadges.forEach(
+        (badgeDiv) => playerSummaryDiv.appendChild(badgeDiv));
+    return playerSummaryDiv;
+}
+
+function drawPanel(game) {
+    const panelDiv = div('panel');
+    const playerSummaryDiv = drawPlayerSummary(game);
+    panelDiv.appendChild(playerSummaryDiv);
+    return panelDiv;
+}
+
+function drawBoard(game) {
+    const boardDiv = div('board');
     const board = game.get_board();
     const [width, height] = [board.width, board.height];
-    const boardDiv = document.createElement('div');
-    boardDiv.classList.add('board');
     const tiles = board.get_tiles();
     const territories = board.get_territories();
     let tileIndex = 0;
@@ -78,12 +98,11 @@ function drawGame(game, div) {
         })
     };
     for (let row = 0; row < height; ++row) {
-        const rowDiv = document.createElement('div');
-        rowDiv.classList.add('board-row');
+        const rowDiv = div('board-row');
         for (let col = 0; col < width; ++col) {
             const tile = tiles[tileIndex++];
-            const tileContent = document.createElement('div');
             const tileClass = (tile.kind == TileKind.Sea) ? 'sea' : 'land';
+            const tileContent = div(tileClass);
             const tileDiv = buildTile(tileClass, tileContent);
             if (tileClass == 'land') {
                 addColorObserverTile(tileDiv);
@@ -94,13 +113,20 @@ function drawGame(game, div) {
         }
         boardDiv.appendChild(rowDiv);
     }
-    const gameDiv = document.createElement('div');
-    gameDiv.classList.add('game-portal');
+    return boardDiv;
+}
+
+function drawGame(game, targetDiv) {
+    const boardDiv = drawBoard(game);
+    const gameDiv = div('game-portal');
     gameDiv.appendChild(boardDiv);
     gameDiv.addEventListener('mousedown', makeGameDragHandler());
 
-    div.innerHTML = '';
-    div.appendChild(gameDiv);
+    const panelDiv = drawPanel(game);
+
+    targetDiv.innerHTML = '';
+    targetDiv.appendChild(gameDiv);
+    targetDiv.appendChild(panelDiv);
 }
 
 function makeGameDragHandler() {

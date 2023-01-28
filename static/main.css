@@ -14,10 +14,22 @@
     --inner-tile-size-sqrt3-half: calc(var(--inner-tile-size-sqrt3) / 2);
 }
 
+/* Overall */
 #content {
     height: 100vh;
 }
-
+.panel {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    min-width: 100px;
+    width: 15%;
+    min-height: 200px;
+    height: 80%;
+    background-color: #efefef;
+    border: 2px solid black;
+    padding: 10px;
+}
 .game-portal {
     width: 75%;
     max-height: 90%;
@@ -35,6 +47,18 @@
     padding-bottom: 25%;
 }
 
+/* Panel */
+.color-swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid black;
+    --color: #ffffff00;
+    background-color: var(--color);
+    margin-right: 5px;
+}
+
+/* Board */
 .board-tile {
     margin-top: var(--tile-size-half);
     width: var(--tile-size-sqrt3);
