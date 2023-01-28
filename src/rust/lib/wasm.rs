@@ -5,16 +5,13 @@ use crate::color;
 use crate::config;
 
 #[wasm_bindgen]
-pub fn dummy() -> JsValue {
-    JsValue::from_str("Hello, from Rust!")
-}
-
-#[wasm_bindgen]
 #[derive(Serialize, Deserialize)]
 #[serde(remote = "Self")]
 pub struct Game {
-    board: Board,
-    players: Vec<Player>,
+    #[wasm_bindgen(skip)]
+    pub board: Board,
+    #[wasm_bindgen(skip)]
+    pub players: Vec<Player>,
     #[serde(skip)]
     pub cur_turn: usize,
 }
@@ -81,10 +78,14 @@ impl<'de> Deserialize<'de> for Game {
 pub struct Board {
     pub width: usize,
     pub height: usize,
-    tiles: Vec<Tile>,
-    units: Vec<Unit>,
-    houses: Vec<House>,
-    territories: Vec<Territory>
+    #[wasm_bindgen(skip)]
+    pub tiles: Vec<Tile>,
+    #[wasm_bindgen(skip)]
+    pub units: Vec<Unit>,
+    #[wasm_bindgen(skip)]
+    pub houses: Vec<House>,
+    #[wasm_bindgen(skip)]
+    pub territories: Vec<Territory>
 }
 #[wasm_bindgen]
 impl Board {
@@ -127,7 +128,10 @@ pub fn get_unit_upkeep(kind: UnitKind) -> u64 {
 #[derive(Clone, Copy, Serialize, Deserialize)]
 pub struct Unit {
     pub kind: UnitKind,
-    position: (usize, usize),
+    #[wasm_bindgen(skip)]
+    pub position: (usize, usize),
+    #[wasm_bindgen(skip)]
+    pub last_move_turn: usize
 }
 impl Unit {
     pub fn get_x(&self) -> usize {
@@ -146,7 +150,8 @@ pub struct House {
 #[wasm_bindgen]
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Territory {
-    pub player: usize
+    pub player: usize,
+    pub money: usize
 }
 
 #[wasm_bindgen]
@@ -184,8 +189,8 @@ pub fn make_test_game() -> Game {
                 "units": [],
                 "houses": [],
                 "territories": [
-                    {"player": 0},
-                    {"player": 1}
+                    {"player": 0, "money": 10},
+                    {"player": 1, "money": 10}
                 ]
             },
             "players": [
