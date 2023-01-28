@@ -1,6 +1,7 @@
 use crate::wasm;
 
 pub fn get_player_color(i: usize) -> wasm::RGBColor {
+    // TODO
     if i == 0 {
         wasm::RGBColor(0x15, 0xb0, 0x1a)
     }

@@ -97,13 +97,13 @@ function drawGame(game, div) {
     const gameDiv = document.createElement('div');
     gameDiv.classList.add('game-portal');
     gameDiv.appendChild(boardDiv);
-    gameDiv.addEventListener('mousedown', makeDraggableHandler());
+    gameDiv.addEventListener('mousedown', makeGameDragHandler());
 
     div.innerHTML = '';
     div.appendChild(gameDiv);
 }
 
-function makeDraggableHandler() {
+function makeGameDragHandler() {
     let elt = null;
     let mouseStartPos = null;
     let scrollStartPos = null;

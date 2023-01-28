@@ -2,13 +2,13 @@
     --sea-outer-color: #163399;
     --sea-inner-color: #3366ef;
     --tile-size: 30px;
-    --tile-border: 5px;
+    --tile-border-size: 5px;
     --sqrt3: 1.73205;
     --tile-size-half: calc(var(--tile-size) / 2);
     --tile-size-sqrt3: calc(var(--tile-size) * var(--sqrt3));
     --tile-size-sqrt3-half: calc(var(--tile-size-sqrt3) / 2);
-    --tile-border-vert: calc(var(--tile-border) / var(--sqrt3));
-    --inner-tile-size: calc(var(--tile-size) - 2 * var(--tile-border-vert));
+    --tile-border-vert-size: calc(var(--tile-border-size) / var(--sqrt3));
+    --inner-tile-size: calc(var(--tile-size) - 2 * var(--tile-border-vert-size));
     --inner-tile-size-half: calc(var(--inner-tile-size) / 2);
     --inner-tile-size-sqrt3: calc(var(--inner-tile-size) * var(--sqrt3));
     --inner-tile-size-sqrt3-half: calc(var(--inner-tile-size-sqrt3) / 2);
@@ -22,7 +22,7 @@
     width: 75%;
     max-height: 90%;
     margin-left: auto; margin-right: auto;
-    background-color: lightblue;
+    background-color: var(--sea-outer-color);
     overflow: hidden;
     cursor: grab;
     user-select: none;
@@ -40,7 +40,7 @@
     width: var(--tile-size-sqrt3);
     height: var(--tile-size);
     display: inline-flex; flex-direction: column;
-    margin-left: calc(-1 * var(--tile-border));
+    margin-left: calc(-1 * var(--tile-border-size));
 }
 .board-tile > .upper {
     width: 0; height: 0;
@@ -60,10 +60,10 @@
 }
 .board-tile-inner {
     min-height: var(--inner-tile-size);
-    margin-top: var(--tile-border-vert);
-    margin-bottom: var(--tile-border-vert);
-    margin-left: var(--tile-border);
-    margin-right: var(--tile-border);
+    margin-top: var(--tile-border-vert-size);
+    margin-bottom: var(--tile-border-vert-size);
+    margin-left: var(--tile-border-size);
+    margin-right: var(--tile-border-size);
     display: flex; flex-direction: column;
     z-index: 4;
 }
@@ -89,10 +89,10 @@
 
 .board-row {
     display: flex; flex-direction: row;
-    margin-top: calc(-1 * var(--tile-border));
+    margin-top: calc(-1 * var(--tile-border-size));
 }
 .board-row:nth-child(even) {
-    margin-left: calc(-1 * var(--tile-border) / 2 + var(--tile-size-sqrt3-half));
+    margin-left: calc(-1 * var(--tile-border-size) / 2 + var(--tile-size-sqrt3-half));
 }
 
 .board-tile.sea {
@@ -117,7 +117,7 @@
 
 .board-tile.land {
     z-index: 1;
-    --outer-color: #ffffff;
+    --outer-color: #ffffff00;
     background-color: var(--outer-color);
 }
 .board-tile.land > .upper {
