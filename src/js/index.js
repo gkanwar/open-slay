@@ -18,7 +18,7 @@ function buildTile(tileClass, tileContent) {
     return tileDiv;
 }
 
-function makeColorCallback(playerColors) {
+function makeTilePlayerColorObserver(playerColors) {
     return (mutations) => {
         console.log('mutations', mutations);
         mutations.filter((mutation) => (
@@ -79,24 +79,25 @@ function drawPanel(game) {
     return panelDiv;
 }
 
-function drawBoard(game) {
+function drawBoard(game, hoverTileCallback, clickTileCallback) {
     const boardDiv = div('board');
     const board = game.get_board();
     const [width, height] = [board.width, board.height];
     const tiles = board.get_tiles();
     const territories = board.get_territories();
-    let tileIndex = 0;
     const players = game.get_players();
     const playerColors = players.map((player) =>
         [ rgbToHex(player.color), rgbToHex(darkenColor(player.color)) ]
     );
-    const colorObserver = new MutationObserver(makeColorCallback(playerColors));
+    const colorObserver = new MutationObserver(
+        makeTilePlayerColorObserver(playerColors));
     const addColorObserverTile = (tile) => {
         colorObserver.observe(tile, {
             attributeFilter: ['player'],
             attributeOldValue: true
         })
     };
+    let tileIndex = 0;
     for (let row = 0; row < height; ++row) {
         const rowDiv = div('board-row');
         for (let col = 0; col < width; ++col) {
@@ -108,6 +109,12 @@ function drawBoard(game) {
                 addColorObserverTile(tileDiv);
                 const owner = territories[tile.territory].player;
                 tileDiv.setAttribute('player', owner);
+                tileDiv.addEventListener(
+                    'mouseover', () => hoverTileCallback([row, col])
+                );
+                tileDiv.addEventListener(
+                    'mousedown', () => clickTileCallback([row, col])
+                );
             }
             rowDiv.appendChild(tileDiv);
         }
@@ -116,8 +123,19 @@ function drawBoard(game) {
     return boardDiv;
 }
 
-function drawGame(game, targetDiv) {
-    const boardDiv = drawBoard(game);
+function drawGame(game, targetDiv, uiState) {
+    const hoverTileCallback = (coord) => {
+        uiState.hoveredTile = coord;
+    };
+    const clickTileCallback = (coord) => {
+        const [row, col] = coord;
+        const board = game.get_board();
+        const [width, height] = [board.width, board.height];
+        const tile = board.get_tiles()[row*weight + col];
+        uiState.selectedTerritory = tile.territory;
+    };
+    const boardDiv = drawBoard(
+        game, hoverTileCallback, clickTileCallback);
     const gameDiv = div('game-portal');
     gameDiv.appendChild(boardDiv);
     gameDiv.addEventListener('mousedown', makeGameDragHandler());
@@ -167,5 +185,9 @@ function makeGameDragHandler() {
     }
 
     let game = make_test_game();
-    drawGame(game, mainDiv);
+    const uiState = {
+        'hoveredTile': null,
+        'selectedTerritory': null,
+    };
+    drawGame(game, mainDiv, uiState);
 })();

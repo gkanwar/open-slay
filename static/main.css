@@ -144,6 +144,9 @@
     --outer-color: #ffffff00;
     background-color: var(--outer-color);
 }
+.board-tile.land:hover {
+    --outer-color: white;
+}
 .board-tile.land > .upper {
     border-bottom-color: var(--outer-color);
 }
@@ -151,6 +154,8 @@
     border-top-color: var(--outer-color);
 }
 .board-tile-inner.land {
+    /* for now use inner box to select only */
+    cursor: default;
     background-color: var(--inner-color);
 }
 .board-tile-inner.land > .upper {
